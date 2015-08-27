@@ -1,0 +1,82 @@
+.qv-object-PLSmart div.qv-object-content-container {
+	overflow: auto;
+}
+.qv-object-PLSmart td, th {
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+	border-right: 1px solid #fff;
+	border-radius: 3px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+	cursor: default;
+	font-size: 14px;
+}
+.qv-object-PLSmart td.numeric {
+	text-align: right;
+	font-weight: bold;
+	color: red;
+}
+
+.qv-object-PLSmart td.bold {
+	font-weight: bold;
+}
+
+.qv-object-PLSmart td.bold-center {
+	font-weight: bold;
+	text-align: center;
+}
+
+.qv-object-PLSmart td.bold-center-large {
+	font-weight: bold;
+	text-align: center;
+	font-size: 18px;
+}
+
+.qv-object-PLSmart td.bold-center-large-shadow {
+	font-weight: bold;
+	text-align: center;
+	font-size: 18px;
+	background-color:#ccc;
+}
+
+.qv-object-PLSmart td.center {
+	text-align: center;
+}
+
+.qv-object-PLSmart td.center-large {
+	text-align: center;
+	font-size: 18px;
+}
+
+.qv-object-PLSmart td.center-large-shadow {
+	text-align: center;
+	font-size: 18px;
+	background-color:#ccc;
+}
+
+.qv-object-PLSmart td.large {
+	font-size: 18px;
+}
+
+.qv-object-PLSmart td.large-shadow {
+	font-size: 18px;
+	background-color:#ccc;
+}
+
+.qv-object-PLSmart td.shadow {
+	background-color:#ccc;
+}
+
+
+.qv-object-PLSmart button {
+	width: 100%;
+}
+
+.qv-object-PLSmart tbody tr:hover {
+    cursor: crosshair;
+    background-color:#808080 !important;
+    color:#ffffff;
+}
+
