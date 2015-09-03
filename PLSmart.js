@@ -71,7 +71,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 										value: "#4575b4",
 										label: "Blue"
 									}, {
-										value: "#fff5f0",
+										value: "#ffe697",
 										label: "Orange"
 									}, {
 										value: "#da9694",
@@ -138,7 +138,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 										value: "#4575b4",
 										label: "Blue"
 									}, {
-										value: "#fff5f0",
+										value: "#fff8e1",
 										label: "Orange"
 									}, {
 										value: "#da9694",
@@ -308,6 +308,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 			var vHeaderAlign = layout.HeaderAlign;
 			var vHeaderColorSchema = layout.HeaderColorSchema;
 			var vColorSchema = layout.ColorSchema;
+			
 			var vColorText = "";
 			
 			if (vColorSchema == '#4575b4') {
@@ -435,7 +436,12 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 						vOKParentChild = 1;
 					if (measure_count == 2) {
 						arrayL1[lastrow] = new Array(9);
-						arrayL1[lastrow][6] = row[4].qNum;//measure2
+						if (vRecalcGroups) {
+							arrayL1[lastrow][6] = row[4].qNum;//measure2
+						}else{
+							arrayL1[lastrow][6] = 0;//measure2
+						}
+						
 						arrayL1[lastrow][7] = row[3].qNum - row[4].qNum;//measure3 - absolute difference
 						arrayL1[lastrow][8] = 0; //measure4 - % difference
 					}else{
@@ -447,7 +453,11 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					arrayL1[lastrow][2] = row[2].qText;//desc
 					arrayL1[lastrow][3] = row[0].qElemNumber;//internal code to make further selections
 					arrayL1[lastrow][4] = 1;//1 is de default level for all concepts
-					arrayL1[lastrow][5] = row[3].qNum;//measure1
+					if (vRecalcGroups) {
+						arrayL1[lastrow][5] = row[3].qNum;//measure1
+					}else{
+						arrayL1[lastrow][5] = 0;//measure1
+					}
 					
 					
 					
@@ -797,12 +807,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 										vColumnText = "";
 									}
 									html += html2 +';text-align:right">' + vColumnText + '</td>';							
-								}
-								//if (vColumn == vNumMeasuresCheckLevels) {
-								//	vComment = 0;
-									//alert(vColumnText + ' * ' + vColumn);
-								//}
-								//alert(vColumnText + ' * ' + vColumn + ' * ' + vNumMeasuresCheckLevels + ' * ' + vComment);
+								}							
 							}
 						}
 					}else{
@@ -817,10 +822,12 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 							
 						}else{	
 										   
-						if (vComas >0 && (cell.qText == '<white>' || cell.qText == '<bold>' || cell.qText == '<dark>' || cell.qText == '<soft>' || cell.qText == '<red>' || cell.qText == '<orange>' || cell.qText == '<violete>' || cell.qText == '<large>' || cell.qText == '<center>' || cell.qText == '<comment>')) {
+						if (vComas >0 && (cell.qText == '<white>' || cell.qText == '<bold>' || cell.qText == '<dark>' || cell.qText == '<soft>' || cell.qText == '<red>' || cell.qText == '<orange>' || cell.qText == '<violete>' || cell.qText == '<large>' || cell.qText == '<center>' || cell.qText == '<comment>' || cell.qText.substring(0, 1) == '#')) {
 							html += ';';
 							html2 += ';';
 						}
+						
+						
 						switch (cell.qText)
 						{
 							case '<white>':
@@ -838,7 +845,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 							case '<comment>': //here
 							vComment = 1;
 							vComas ++;
-							break;
+							break;												
 						
 							case '<dark>':
 							html += 'background-color:#c4c4c4';
@@ -882,8 +889,13 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 							vComas ++;
 							break;
 						
-							
-							
+							default:
+							if (cell.qText.substring(0, 1) == '#') {
+								html += 'background-color:' + cell.qText;
+								html2 += 'background-color:' + cell.qText;
+								vComas ++;								
+							}
+							break;							
 						}
 						
 						}
@@ -916,7 +928,6 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 			if (vStyle=='parentchild' && vOKParentChild == 1){
 				var arrayL2Aux = new Array();
 				for (var i=0;i<arrayL1.length;i++){
-					//arrayL2Aux[i] = arrayL1[i][1];
 					arrayL2Aux.push(arrayL1[i][1]);
 				}
 			
@@ -1840,18 +1851,20 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					break;
 				
 					case '#efefef': //soft
-					vReturnStylePC2 = 'background-color:#f2f2f2';
+					//vReturnStylePC2 = 'background-color:#f2f2f2';
+					vReturnStylePC2 = 'background-color:#ffffff;font-weight:bold';
 					break;
 				
 					case '#cccccc': //dark
-					vReturnStylePC2 = 'background-color:#d9d9d9';
+					//vReturnStylePC2 = 'background-color:#d9d9d9';
+					vReturnStylePC2 = 'background-color:#ffffff;font-weight:bold';
 					break;
 				
 					case '#4575b4': //blue
 					vReturnStylePC2 = 'background-color:#ffffff;font-weight:bold';
 					break;
 				
-					case '#fff5f0': //orange
+					case '#fff8e1': //orange
 					vReturnStylePC2 = 'background-color:#ffffff;font-weight:bold';
 					break;
 				
@@ -1888,7 +1901,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					vReturnStylePC3 = 'background-color:#c9e8ff';
 					break;
 				
-					case '#fff5f0': //orange
+					case '#fff8e1': //orange
 					vReturnStylePC3 = 'background-color:#fff8e1';
 					break;
 				
@@ -1924,7 +1937,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					vReturnStylePC4 = 'background-color:#c9e8ff;font-weight:bold';
 					break;
 				
-					case '#fff5f0': //orange
+					case '#fff8e1': //orange
 					vReturnStylePC4 = 'background-color:#fff8e1;font-weight:bold';
 					break;
 				
@@ -1942,6 +1955,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 			
 			function levelPC5()
 			{
+					
 				var vReturnStylePC5 = "";
 				switch (vColorSchema) {
 					case '#ffffff': //clean
@@ -1960,7 +1974,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					vReturnStylePC5 = 'background-color:#a7d9ff;font-weight:bold';
 					break;
 				
-					case '#fff5f0': //orange
+					case '#fff8e1': //orange
 					vReturnStylePC5 = 'background-color:#ffeeb7;font-weight:bold';
 					break;
 				
@@ -1996,7 +2010,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					vReturnStylePC6 = 'background-color:#81c9ff;font-weight:bold';
 					break;
 				
-					case '#fff5f0': //orange
+					case '#fff8e1': //orange
 					vReturnStylePC6 = 'background-color:#ffe697;font-weight:bold';
 					break;
 				
@@ -2032,7 +2046,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					vReturnStylePC7 = 'background-color:#5bb9ff;font-weight:bold';
 					break;
 				
-					case '#fff5f0': //orange
+					case '#fff8e1': //orange
 					vReturnStylePC7 = 'background-color:#ffd757;font-weight:bold';
 					break;
 				
@@ -2068,7 +2082,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					vReturnStylePC8 = 'background-color:#2fa6ff;font-weight:bold;color:white';
 					break;
 				
-					case '#fff5f0': //orange
+					case '#fff8e1': //orange
 					vReturnStylePC8 = 'background-color:#ffc819;font-weight:bold;color:white';
 					break;
 				
@@ -2104,7 +2118,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					vReturnStylePC9 = 'background-color:#0088ee;font-weight:bold;color:white';
 					break;
 				
-					case '#fff5f0': //orange
+					case '#fff8e1': //orange
 					vReturnStylePC9 = 'background-color:#e6af00;font-weight:bold;color:white';
 					break;
 				
@@ -2140,7 +2154,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					vReturnStylePC10 = 'background-color:#0070c0;font-weight:bold;color:white';
 					break;
 				
-					case '#fff5f0': //orange
+					case '#fff8e1': //orange
 					vReturnStylePC10 = 'background-color:#b48900;font-weight:bold;color:white';
 					break;
 				
