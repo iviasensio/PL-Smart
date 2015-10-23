@@ -2,7 +2,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 	$("<style>").html(cssContent).appendTo("head");
 	return {
 		initialProperties : {
-			version: 1.0,
+			version: 2.0,
 			qHyperCubeDef : {
 				qDimensions : [],
 				qMeasures : [],
@@ -264,6 +264,20 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 									show : function(data) {
 										return data.TableStyle == "parentchild";
 									}
+								},
+								AllowExportXLS : {
+									ref : "allowexportxls",
+									type : "boolean",
+									component : "switch",
+									label : "Allow export to Excel",
+									options: [{
+										value: true,
+										label: "On"
+									}, {
+										value: false,
+										label: "Off"
+									}],
+									defaultValue: true
 								}
 							}
 						}						
@@ -308,6 +322,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 			var vHeaderAlign = layout.HeaderAlign;
 			var vHeaderColorSchema = layout.HeaderColorSchema;
 			var vColorSchema = layout.ColorSchema;
+			var vExportToExcel = layout.allowexportxls;
 			
 			var vColorText = "";
 			
@@ -365,6 +380,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 			var vNumDims = 0;
 			var vNumMeasures = 0;
 			var vNumMeasuresCheckLevels = 2;
+			var vNumCols = 0;
 			
 			$.each(this.backendApi.getDimensionInfos(), function(key, value) {
 				vDimName = value.qFallbackTitle;
@@ -417,7 +433,9 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 			
 			this.backendApi.eachDataRow(function(rownum, row) {
 				lastrow = rownum;
-				html += '<tr>';
+				if(vStyle!='parentchild'){
+					html += '<tr>';
+				}
 				var vColumn = 0;
 				var vColumnP = 0;
 				
@@ -436,11 +454,11 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 						vOKParentChild = 1;
 					if (measure_count == 2) {
 						arrayL1[lastrow] = new Array(9);
-						if (vRecalcGroups) {
+						//if (vRecalcGroups) {
 							arrayL1[lastrow][6] = row[4].qNum;//measure2
-						}else{
-							arrayL1[lastrow][6] = 0;//measure2
-						}
+						//}else{
+						//	arrayL1[lastrow][6] = 0;//measure2
+						//}
 						
 						arrayL1[lastrow][7] = row[3].qNum - row[4].qNum;//measure3 - absolute difference
 						arrayL1[lastrow][8] = 0; //measure4 - % difference
@@ -453,11 +471,11 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					arrayL1[lastrow][2] = row[2].qText;//desc
 					arrayL1[lastrow][3] = row[0].qElemNumber;//internal code to make further selections
 					arrayL1[lastrow][4] = 1;//1 is de default level for all concepts
-					if (vRecalcGroups) {
+					//if (vRecalcGroups) {
 						arrayL1[lastrow][5] = row[3].qNum;//measure1
-					}else{
-						arrayL1[lastrow][5] = 0;//measure1
-					}
+					//}else{
+					//	arrayL1[lastrow][5] = 0;//measure1
+					//}
 					
 					
 					
@@ -480,6 +498,8 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 												
 						vComas = 0;
 						if (vLogicTags == 'bycoincidence') {
+							vNumCols = vNumDims + vNumMeasures;
+							
 							html += '<td style ="';
 							vColumnText = cell.qText;
 							vStartsRight = vColumnText.length - vEndsWith.length - 1;
@@ -517,6 +537,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 								html += html2 +';text-align:right">' + vColumnText + '</td>';													
 							}
 						}else{
+							vNumCols = 1 + vNumMeasures;
 							if (vColumn == 1 || vColumn > vNumDims) {
 								html += '<td style ="';
 								vColumnText = cell.qText;
@@ -811,6 +832,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 							}
 						}
 					}else{
+						vNumCols  = 1 + vNumMeasures;
 						if (vColumn == 1 || vColumn > vNumDims) {
 							html += '<td style ="';
 							vColumnText = cell.qText;
@@ -842,7 +864,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 							vComas ++;
 							break;
 						
-							case '<comment>': //here
+							case '<comment>': 
 							vComment = 1;
 							vComas ++;
 							break;												
@@ -920,12 +942,20 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					
 				});
 				}
-				html += '</tr>';				
+				if(vStyle!='parentchild'){
+					html += '</tr>';
+				}
+				//html += '</tr>';	 	
 			});
 			
 			//ini parent-child style
 			
 			if (vStyle=='parentchild' && vOKParentChild == 1){
+				if (vNumMeasures == 1) {
+					vNumCols = 2;
+				}else{
+					vNumCols = 5;
+				}
 				var arrayL2Aux = new Array();
 				for (var i=0;i<arrayL1.length;i++){
 					arrayL2Aux.push(arrayL1[i][1]);
@@ -1659,7 +1689,8 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 					break;
 				
 					default:
-					if(vNumberOfLevels <10){
+					if(vNumberOfLevels <10){ 
+						
 						if(vNumberOfLevels <9){
 						if(vNumberOfLevels <8){
 							if(vNumberOfLevels <7){
@@ -1765,7 +1796,7 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 			}
 			
 			if (myFootNote.length>1) {
-				html += "</tbody><tfoot><tr><td colspan='5' style ='background-color:#52CC52;color:white'>" + vExportNote + "</td></tr></tfoot></table></div>";
+				html += "</tbody><tfoot><tr><td colspan='" + vNumCols + "' style ='background-color:#52CC52;color:white'>" + vExportNote + "</td></tr></tfoot></table></div>";
 			}else{
 				html += "</tbody></table></div>";
 			}
@@ -1774,8 +1805,10 @@ define(["jquery", "text!./PLSmart.css"], function($, cssContent) {'use strict';
 				html += "<button id='more'>More...</button>";
 				morebutton = true;
 			}
+			if (vExportToExcel) {
+				html +="<div><button id='sendToExcel' style='background-color:#8AC007;color:white;border: 2px solid;border-radius: 25px;'>Send to Excel</button></div>";	
+			}
 			
-			html +="<div><button id='sendToExcel' style='background-color:#8AC007;color:white;border: 2px solid;border-radius: 25px;'>Send to Excel</button></div>";
 			
 			if (vStyle == 'parentchild' && vOKParentChild == 0) {
 				html = "<div style = 'position:absolute;color:red;font-weight:bold;font-family: sans-serif;font-size: large;left:0px; top:" + yWorking.toString() + "px;font-size:" + FontSizeWorking.toString() + "px;'>The Parent-Child mode requires 3 dimensions: child + parent + desc (in this order) and 1 or 2 measures (current year revenue and last year revenue i.e.)!</div>";
