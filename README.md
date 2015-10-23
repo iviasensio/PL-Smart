@@ -10,6 +10,15 @@ Is specifically focus on financial reports, trying to solve some common needs of
 
 You'll find very useful info about the guidelines inside the app P&LExample.qvf
 
+WARNING: before import the extension from the server remember to remove all the non functional files.
+Please remove:
+.gitattributes
+.gitignore
+P&L.xlsx
+P&LExample.qvf
+P&LSmart.png
+Qlik Sense P&LSmart Extension Manual.pdf
+README.md
 
 Author:Ivan Felipe Asensio
 
