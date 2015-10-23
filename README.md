@@ -10,7 +10,7 @@ Is specifically focus on financial reports, trying to solve some common needs of
 
 You'll find very useful info about the guidelines inside the app P&LExample.qvf
 
-WARNING: before import the extension from the server remember to remove all the non functional files.
+WARNING1: before import the extension from the server remember to remove all the non functional files.
 Please remove:
 .gitattributes
 .gitignore
@@ -19,6 +19,11 @@ P&LExample.qvf
 P&LSmart.png
 Qlik Sense P&LSmart Extension Manual.pdf
 README.md
+
+WARNING2: now you'll be able to hide the Export to excel button.
+You'll need to edit your P&LSmart reports and clic on the option 'Allow export to excel'.
+Although it's check in 'Allow' by default for the new reports, it's needed to do that for the oldest ones.
+
 
 Author:Ivan Felipe Asensio
 
