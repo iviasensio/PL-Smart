@@ -1,6 +1,7 @@
 P&L Smart, a Qlik Sense Extension for Financial reporting 
 =============================
 =============================
+Available in https://github.com/iviasensio/PL-Smart
 
 Current version 2.0:
 
